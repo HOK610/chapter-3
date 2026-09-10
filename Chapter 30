@@ -1,0 +1,98 @@
+= Chapter 3. Creating a software bill of materials manifest file
+
+A software bill of materials (SBOM) manifest file lists the package data that Red Hat Trusted Profile Analyzer (RHTPA) needs for security analysis. RHTPA analyzes SBOM manifest files in JSON format, using either the CycloneDX or the Software Package Data Exchange (SPDX) format.
+
+This procedure uses the Syft tool to generate an SBOM manifest file from a container image or from your application.
+
+[IMPORTANT]
+====
+Trusted Profile Analyzer supports only the following SBOM formats:
+
+* CycloneDX versions 1.3, 1.4, 1.5, and 1.6
+* SPDX versions 2.2 and 2.3
+====
+
+[IMPORTANT]
+====
+The Syft binary is a Technology Preview feature. Technology Preview features are not supported by Red Hat production service level agreements (SLAs) and might not be functionally complete. Do not use Technology Preview features in production. These features give you early access to upcoming product features so that you can test functionality and provide feedback during development. For more information, see link:https://access.redhat.com/support/offerings/techpreview[Red Hat Technology Preview features support scope].
+====
+
+== Prerequisites
+
+* Install Syft for your workstation platform from one of the following sources:
+** https://catalog.redhat.com/en/software/containers/rh-syft-tech-preview/syft-rhel9/65b2745c19638ad4ad858412?architecture=amd64&image=661ce4dbfcbcdbfdecc6ffb8:#[Red Hat Ecosystem Catalog]
+** https://github.com#[GitHub]
+
+== Procedure: Creating an SBOM from a container image
+
+. Generate an SBOM manifest file in CycloneDX format:
++
+[source,shell]
+----
+$ syft <image_path> -o cyclonedx-json@1.5
+----
++
+For example:
++
+[source,shell]
+----
+$ syft registry:example.io/hello-world:latest -o cyclonedx-json@1.5
+----
+
+. Generate an SBOM manifest file in SPDX format:
++
+[source,shell]
+----
+$ syft <image_path> -o spdx-json@2.3
+----
++
+For example:
++
+[source,shell]
+----
+$ syft registry:example.io/hello-world:latest -o spdx-json@2.3
+----
+
+[NOTE]
+====
+Syft supports many types of container image sources. For the full list, see link:https://github.com/anchore/syft[Syft's GitHub site].
+====
+
+== Procedure: Creating an SBOM from the local file system
+
+. Generate an SBOM manifest file in CycloneDX format from a directory or a file:
++
+[source,shell]
+----
+$ syft dir:<directory_path> -o cyclonedx-json@1.5
+$ syft file:<file_path> -o cyclonedx-json@1.5
+----
++
+For example:
++
+[source,shell]
+----
+$ syft dir:. -o cyclonedx-json@1.5
+$ syft file:/example-binary -o cyclonedx-json@1.5
+----
+
+. Generate an SBOM manifest file in SPDX format from a directory or a file:
++
+[source,shell]
+----
+$ syft dir:<directory_path> -o spdx-json@2.3
+$ syft file:<file_path> -o spdx-json@2.3
+----
++
+For example:
++
+[source,shell]
+----
+$ syft dir:. -o spdx-json@2.3
+$ syft file:/example-binary -o spdx-json@2.3
+----
+
+== Additional resources
+
+* https://www.ntia.gov/files/ntia/publications/howto_guide_for_sbom_generation_v1.pdf[How-to guide on SBOM generation]
+* https://github.com/guacsec/trustify/blob/main/etc/gensbom/README.md#[Generating SBOM documents from container images]
